@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Techno - vue.js">
+  <script src="../assets/js/vendor/vue.min.js"></script>
+  <link rel="stylesheet" href="../assets/fonts/stylesheet.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <title>Techno</title>
+</head>
+
+<body>
+  <div id="app">
+
+    <!--Header-->
+    <header class="header">
+      <div class="logo">
+        <img src="../assets/img/icons/techno.svg" alt="Techno">
+      </div>
+      <div class="menu-cart" @click="activeCart = true">
+        {{totalCart | priceNumber}} | {{cart.length}}
+      </div>
+    </header>
+
+    <!--Products-->
+    <section class="products">
+      <div v-for="item in products" :key="item.id" @click="openModal(item.id)" class="product">
+        <img :src="item.img" :alt="item.name" class="img-product" width="300" height="150">
+        <div class="info-product">
+          <span class="price-product">{{item.price | priceNumber}}</span>
+          <h2 class="title-product">{{item.name}}</h2>
+        </div>
+      </div>
+    </section>
+
+    <!--Modal-->
+    <section class="modal" v-if="product" @click="closerModal">
+      <div class="container-modal">
+        <div class="img-modal">
+          <img :src="product.img" :alt="product.nome" width="300" height="450">
+        </div>
+        <div class="dados-modal">
+          <button @click="product = false" class="closer-modal">X</button>
+          <span class="price-modal">{{product.price | priceNumber}}</span>
+          <div class="title-modal">
+            <h2>{{product.name}}</h2>
+          </div>
+          <div class="description-modal">
+            <p>{{product.description}}</p>
+            <button class="btn-modal" v-if="product.inventory > 0" @click="addItem">Adicionar Item</button>
+            <button class="btn-modal sold-off" v-else disabled>Produto esgotado</button>
+          </div>
+        </div>
+        <div class="reviews-modal">
+          <div class="reviews-subtitle">
+            <h2>Avaliações</h2>
+          </div>
+          <div class="list-of-reviews">
+            <ul>
+              <li v-for="review in product.reviews" class="review">
+                <div class="description-review">
+                  <p>{{review.description}}</p>
+                </div>
+                <div class="user-review">
+                  <p>{{review.name}} | {{review.stars}} estrelas</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Modal Cart-->
+    <section class="modal-cart" :class="{active: activeCart}" @click="closerCart">
+      <div class="container-cart">
+        <button class="closer-cart" @click="activeCart = false">X</button>
+        <div class="title-cart">
+          <h2>Carrinho</h2>
+        </div>
+        <div v-if="cart.length > 0">
+          <ul class="list-cart">
+            <li v-for="(item, index) in cart" class="item-cart">
+              <p>{{item.name}}</p>
+              <p class="price-cart">{{item.price | priceNumber}}</p>
+              <button class="remove-cart" @click="removerItem(index)">X</button>
+            </li>
+          </ul>
+          <div class="total-cart">
+            <p>{{totalCart | priceNumber}}</p>
+          </div>
+          <button class="finish-cart">Finalizar Compra</button>
+        </div>
+        <div class="empty-cart" v-else>
+          <p>O carrinho esta vazio</p>
+        </div>
+      </div>
+    </section>
+
+    <!--Alert-->
+    <div class="alert" :class="{active: activeAlert}">
+      <p class="alertMensage">{{alertMensage}}</p>
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+</body>
+
+</html>
